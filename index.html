@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archives Déclassifiées — CQTC & TTH</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&family=Special+Elite&display=swap');
+
+  :root {
+    --red: #c0392b;
+    --red-bright: #e74c3c;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --dark: #0a0a0a;
+    --dark2: #111111;
+    --dark3: #1a1a1a;
+    --dark4: #222222;
+    --gray: #888;
+    --light: #ddd;
+    --white: #f5f5f5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Source Sans 3', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      linear-gradient(180deg, #000 0%, #0a0505 50%, #000 100%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(192,57,43,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(192,57,43,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  .hero-scanlines {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 2rem;
+  }
+
+  .classified-stamp {
+    display: inline-block;
+    border: 3px solid var(--red);
+    color: var(--red);
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    padding: 0.3rem 1rem;
+    transform: rotate(-2deg);
+    margin-bottom: 2rem;
+    opacity: 0.85;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero h1 .line-fr { color: var(--gold); }
+  .hero h1 .line-en { color: var(--white); }
+
+  .hero-subtitle {
+    font-family: 'Special Elite', monospace;
+    font-size: clamp(0.7rem, 2vw, 0.95rem);
+    letter-spacing: 0.25em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin: 1.5rem 0 2.5rem;
+  }
+
+  /* ── LANG TOGGLE ── */
+  .lang-toggle {
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto 3rem;
+    width: fit-content;
+  }
+
+  .lang-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    padding: 0.6rem 1.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn.active {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .lang-btn:not(.active):hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--white);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint svg { width: 20px; opacity: 0.5; }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  /* ── CHANNEL HEADER ── */
+  .channel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .channel-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 0.4rem 1rem;
+  }
+
+  .channel-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-fr { background: var(--gold); }
+  .dot-en { background: var(--red-bright); }
+
+  .channel-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .channel-yt-link {
+    margin-left: auto;
+    color: var(--gray);
+    font-size: 0.75rem;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .channel-yt-link:hover { color: var(--red-bright); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(192,57,43,0.3);
+  }
+
+  /* ── SERIES GRID ── */
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+  }
+
+  /* ── SERIES CARD ── */
+  .series-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .series-card:hover {
+    border-color: rgba(192,57,43,0.4);
+    transform: translateY(-2px);
+  }
+
+  .series-card.open { border-color: rgba(192,57,43,0.5); }
+
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .card-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.08);
+    line-height: 1;
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  .card-info { flex: 1; }
+
+  .card-badge {
+    display: inline-block;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .badge-fr { background: rgba(201,168,76,0.15); color: var(--gold); }
+  .badge-en { background: rgba(192,57,43,0.15); color: var(--red-bright); }
+  .badge-standalone { background: rgba(255,255,255,0.05); color: var(--gray); }
+
+  .card-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--gray);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .ep-count {
+    font-size: 0.72rem;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .ep-count span { color: var(--gold); font-weight: 600; }
+
+  .toggle-arrow {
+    width: 18px; height: 18px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, border-color 0.2s;
+  }
+  .series-card.open .toggle-arrow { transform: rotate(180deg); border-color: var(--red); }
+
+  /* ── EPISODES ── */
+  .episodes-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .series-card.open .episodes-panel { max-height: 2000px; }
+
+  .ep-list {
+    padding: 0.5rem 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ep-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+    group: true;
+  }
+
+  .ep-item:hover {
+    background: rgba(192,57,43,0.08);
+    border-color: rgba(192,57,43,0.25);
+  }
+
+  .ep-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.7rem;
+    color: var(--red);
+    min-width: 2.5rem;
+    padding-top: 0.15rem;
+    letter-spacing: 0.05em;
+  }
+
+  .ep-content { flex: 1; }
+
+  .ep-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--light);
+    line-height: 1.3;
+    margin-bottom: 0.2rem;
+  }
+
+  .ep-desc {
+    font-size: 0.72rem;
+    color: #666;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ep-watch {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  /* ── DIVIDER ── */
+  .channel-divider {
+    margin: 3rem 0;
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.5);
+  }
+
+  footer p {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.7rem;
+    color: #444;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 2;
+  }
+
+  footer a { color: #555; text-decoration: none; }
+  footer a:hover { color: var(--gray); }
+
+  /* ── LANG VISIBILITY ── */
+  [data-lang="fr"] { display: block; }
+  [data-lang="en"] { display: none; }
+  body.lang-en [data-lang="fr"] { display: none; }
+  body.lang-en [data-lang="en"] { display: block; }
+
+  /* standalone = always visible in the right lang section */
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .series-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ HERO ═══════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-scanlines"></div>
+  <div class="hero-content">
+    <div class="classified-stamp">⬛ Classified Archives ⬛</div>
+    <h1>
+      <div class="line-fr">Ce Qu'on Te Cache</div>
+      <div class="line-en" style="font-size:0.55em; opacity:0.5; margin:0.3em 0">×</div>
+      <div class="line-en" style="color:var(--white)">The Truth They Hide</div>
+    </h1>
+    <p class="hero-subtitle">Dossiers déclassifiés officiels — CIA · NASA · Vatican · FBI</p>
+
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">🇫🇷 &nbsp;Français</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">🇬🇧 &nbsp;English</button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">18</span>
+        <span class="stat-label">Séries</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">100+</span>
+        <span class="stat-label">Épisodes</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Agences</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">82</span>
+        <span class="stat-label">Ans d'archives</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Explorer</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ MAIN ═══════════════════════════════════ -->
+<div class="main">
+
+  <!-- ─────────── FR CHANNEL ─────────── -->
+  <div data-lang="fr">
+    <div class="channel-header">
+      <div class="channel-pill">
+        <span class="channel-dot dot-fr"></span>
+        <span class="channel-name">Ce Qu'on Te Cache — CQTC</span>
+      </div>
+      <a class="channel-yt-link" href="https://www.youtube.com/@CeQuonTeCacheCQTC" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zm-14 9.4V8.4l6.3 3.6-6.3 3.6z"/></svg>
+        Voir la chaîne
+      </a>
+    </div>
+
+    <div class="section-label">Séries disponibles — Français</div>
+
+    <div class="series-grid" id="grid-fr"></div>
+  </div>
+
+  <!-- ─────────── EN CHANNEL ─────────── -->
+  <div data-lang="en">
+    <div class="channel-header">
+      <div class="channel-pill">
+        <span class="channel-dot dot-en"></span>
+        <span class="channel-name">The Truth They Hide — TTH</span>
+      </div>
+      <a class="channel-yt-link" href="https://www.youtube.com/@TheTruthTheyHide" target="_blank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zm-14 9.4V8.4l6.3 3.6-6.3 3.6z"/></svg>
+        View channel
+      </a>
+    </div>
+
+    <div class="section-label">Available series — English</div>
+
+    <div class="series-grid" id="grid-en"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
+<footer>
+  <p>Sources : CIA FOIA · FBI Vault · The Black Vault · NARA · Archives nationales</p>
+  <p>Mis à jour : 2026-05-29 &nbsp;·&nbsp; <a href="https://www.youtube.com/@CeQuonTeCacheCQTC" target="_blank">CQTC</a> &nbsp;·&nbsp; <a href="https://www.youtube.com/@TheTruthTheyHide" target="_blank">TTH</a></p>
+</footer>
+
+<script>
+// ═══════════════════════ DATA ═══════════════════════
+
+const FR_SERIES = [
+  {
+    title: "Le Mossad",
+    desc: "Opérations secrètes, assassinats ciblés et renseignement israélien",
+    episodes: [
+      { n:"E01", title:"Le Mossad — 12 assassinats ciblés dont les commanditaires n'ont jamais comparu", desc:"L'État d'Israël a institutionnalisé l'assassinat ciblé comme outil de politique étrangère depuis 1972. Chaque opération est documentée, chaque victime répertoriée.", url:"https://youtu.be/jtyWGE4ZG_0" },
+      { n:"E02", title:"40 agents du Mossad en territoire hostile — les missions que personne n'a confirmées officiellement", desc:"Des opérations clandestines menées sur des sols ennemis — faits documentés que le gouvernement israélien n'a jamais officiellement reconnus.", url:"https://youtu.be/4W7Qo-m1HKA" },
+      { n:"E03", title:"Mossad et KGB — les documents qui suggèrent une coopération secrète pendant la Guerre froide", desc:"Derrière l'idéologie opposée, des intérêts convergents et des contacts documentés entre les deux services les plus redoutés de la Guerre froide.", url:"https://youtu.be/Pea2BrJ1jXM" },
+      { n:"E04", title:"Comment le Mossad influence les médias — opérations de désinformation documentées", desc:"Des opérations documentées où le Mossad a utilisé les médias comme outil opérationnel — manipulation de la presse, agents sous couverture journalistique.", url:"https://youtu.be/gezI7zpJ3jg" },
+      { n:"E05", title:"L'Unité 8200 — la division cyber du Mossad que Tel Aviv ne reconnaît pas officiellement", desc:"L'unité de renseignement électronique la plus puissante du Moyen-Orient, incubateur des technologies de surveillance mondiales.", url:"https://youtu.be/WssMnX2azqo" },
+      { n:"E06", title:"Stuxnet, Pegasus, Flame — les cyberarmes du Mossad dans les documents déclassifiés", desc:"Trois cyberarmes israéliennes documentées qui ont redéfini la guerre moderne — ce que les documents officiels et les enquêtes journalistiques ont établi.", url:"https://youtu.be/iPMlwjs8RRQ" },
+    ]
+  },
+  {
+    title: "Projet Stargate",
+    desc: "Quand la CIA explorait les pouvoirs psychiques et la voyance — 20 millions de dollars et 23 ans de recherches",
+    episodes: [
+      { n:"E01", title:"195 séances d'hypnose, zéro résultat — le programme secret de la CIA avant Stargate", desc:"Avant Project Stargate, la CIA finançait des programmes de contrôle mental et de manipulation psychologique pendant les années 1950. Project ARTICHOKE, BLUEBIRD.", url:"https://youtu.be/JuKPb_0K-GM" },
+      { n:"E02", title:"Les OVNIs comme couverture — comment la CIA cachait ses vrais programmes derrière les rapports d'ovnis", desc:"Pendant 40 ans, la CIA a délibérément alimenté la confusion autour des OVNIs pour protéger ses programmes les plus secrets.", url:"https://youtu.be/zfJiVB2ZL0w" },
+      { n:"E03", title:"Projet Stargate — 20 millions de dollars pour prouver la voyance. Ce que les documents disent vraiment.", desc:"Entre 1972 et 1995, la CIA et la DIA ont dépensé environ 20 millions de dollars pour tester si des humains pouvaient percevoir des informations à distance.", url:"https://youtu.be/S1ce9NfX55Q" },
+      { n:"E04", title:"13 ans d'expériences psychiques — les protocoles, les sujets et pourquoi rien n'a fonctionné", desc:"De 1978 à 1991, des soldats américains étaient payés par l'armée pour voir à distance des cibles soviétiques depuis une pièce sans fenêtres à Fort Meade.", url:"https://youtu.be/JlnodPj5iHM" },
+      { n:"E05", title:"Programmes psi gouvernementaux — comment des agences de renseignement ont financé des décennies de pseudoscience", desc:"Les États-Unis n'étaient pas les seuls à croire que l'esprit humain pouvait espionner. L'URSS dépensait jusqu'à 500 millions de dollars par an.", url:"https://youtu.be/_4YTiowLii4" },
+      { n:"E06", title:"Après Stargate — pourquoi le programme a été abandonné et pourquoi le mythe ne meurt pas", desc:"Le 29 septembre 1995, la CIA ferme officiellement Project Stargate. Le même jour, ABC News diffuse un reportage avec des voyants psychiques.", url:"https://youtu.be/P-rNYT0N3ws" },
+    ]
+  },
+  {
+    title: "Série 1 — Les Fondations",
+    desc: "Introduction à la chaîne CQTC — ce que les institutions préfèrent taire",
+    episodes: [
+      { n:"E01", title:"Ce qu'on ne t'a jamais dit", desc:"Il existe des documents officiels, des archives déclassifiées, des aveux gouvernementaux. Tout est là, accessible. Mais personne n'en parle.", url:"https://youtu.be/3KuygBfbTUI" },
+      { n:"E02", title:"Ce que la CIA a brûlé — les dossiers qu'ils ont voulu effacer pour toujours", desc:"Des milliers de pages détruites en 1973. Des expériences niées pendant des décennies. Ce qu'il reste des 20 000 pages survivantes suffit à tout changer.", url:"https://youtu.be/HgtInKCkjQA" },
+      { n:"E03", title:"OVNI — ce que les gouvernements ont officiellement admis (et ce qu'ils taisent encore)", desc:"Ce n'est plus une théorie. L'armée américaine a confirmé. Les National Archives ont créé le Record Group 615 en 2024. Le Pentagone a publié des vidéos.", url:"https://youtu.be/9FKQ-YNXe-M" },
+      { n:"E04", title:"Les archives du Vatican — des siècles de documents qu'on n'est pas supposé lire", desc:"85 kilomètres de rayonnages. Des documents remontant au 8e siècle. Une politique d'accès contrôlée.", url:"https://youtu.be/g7jQXWPKLmM" },
+      { n:"E05", title:"Ils te surveillent — Snowden, WikiLeaks et les preuves que personne ne veut voir", desc:"Snowden l'a prouvé. WikiLeaks l'a documenté avec Vault 7. Les câbles diplomatiques montrent ce que les gouvernements disent en privé.", url:"https://youtu.be/E-IwIjK0pmw" },
+      { n:"E06", title:"La méthode — comment lire ce qu'on préfèrerait que tu ignores", desc:"Comment on travaille sur cette chaîne : sources primaires, documents originaux, vérification croisée FOIA + archives nationales + leaks.", url:"https://youtu.be/pyxPn_GDg7k" },
+    ]
+  },
+  {
+    title: "Série 2 — Opérations Secrètes",
+    desc: "Les programmes cachés — ce que les archives déclassifiées prouvent vraiment",
+    episodes: [
+      { n:"E01", title:"Opération Paperclip — comment les USA ont recruté 1600 nazis après 1945", desc:"Des documents déclassifiés prouvent que le gouvernement américain a recruté des scientifiques nazis en sachant qu'ils étaient des criminels de guerre.", url:"https://youtu.be/EzVUN28w0J8" },
+      { n:"E02", title:"COINTELPRO — le FBI espionnait Martin Luther King et voulait le détruire", desc:"300 000 dossiers sur des citoyens américains. Des lettres de suicide envoyées à MLK. Des infiltrateurs dans les groupes de droits civiques.", url:"https://youtu.be/7ICy7nuRkA4" },
+      { n:"E03", title:"Opération Mockingbird — la CIA dans les salles de rédaction", desc:"Le rapport Church Committee de 1975 documente des journalistes payés par la CIA. Des rédacteurs en chef informés. Des articles orientés.", url:"https://youtu.be/AL5o_5p2rIs" },
+      { n:"E04", title:"Le Comité Church — quand le Congrès a découvert les crimes de la CIA", desc:"En 1975, le Sénat américain a enquêté sur la CIA pour la première fois. Ce qu'ils ont trouvé : des plans d'assassinat contre des chefs d'État étrangers.", url:"https://youtu.be/ogeIvuOjDeg" },
+      { n:"E05", title:"Opération CHAOS — la CIA espionnait les Américains sur leur propre sol", desc:"La CIA n'a pas le droit d'opérer aux États-Unis. Elle l'a quand même fait. De 1967 à 1974, l'Opération CHAOS a surveillé 7 000 citoyens américains.", url:"https://youtu.be/TEfCRg0Zazk" },
+      { n:"E06", title:"Iran 1953, Guatemala 1954 — les coups d'état que la CIA a officiellement admis", desc:"La CIA a renversé deux gouvernements démocratiquement élus en deux ans. En 2013, elle a officiellement admis le coup d'état iranien de 1953.", url:"https://youtu.be/WoxZbbGn9yU" },
+    ]
+  },
+  {
+    title: "JFK : Archives CIA 2025",
+    desc: "L'assassinat de JFK — les documents CIA déclassifiés en 2025",
+    episodes: [
+      { n:"E01", title:"3 coups de feu confirmés, mais un tir non répertorié par la Commission Warren", desc:"Quels faits certifiés par les docs CIA 2025 modifient le déroulé officiel de la fusillade du 22/11/1963 ?", url:"https://youtu.be/_DWnHxusTGk" },
+      { n:"E02", title:"Oswald a rencontré un agent CIA à Mexico, 6 semaines avant l'attentat", desc:"Quels liens officiels prouvés les docs CIA 2025 établissent entre Oswald et les services secrets américains ?", url:"https://youtu.be/5Ev2fEbaJ-E" },
+      { n:"E03", title:"La thèse de la CIA commanditaire a des preuves, mais pas de preuves définitives", desc:"La thèse populaire de la CIA comme commanditaire : que disent les analyses sérieuses face aux docs 2025 ?", url:"https://youtu.be/CSsvuHf0Wdw" },
+      { n:"E04", title:"La mafia a financé des opérations anti-Castro, mais aucun ordre d'attentat prouvé", desc:"La thèse d'un complot mafia anti-Castro : comment les docs 2025 modifient-ils son analyse sérieuse ?", url:"https://youtu.be/Rx4UsQSDAC4" },
+      { n:"E05", title:"147 pages des docs 2025 sont censurées, motifs jugés non fondés", desc:"Quels docs CIA 2025 restent censurés, et pourquoi leurs motifs sont-ils jugés douteux ?", url:"https://youtu.be/ltRLS7r7LLo" },
+      { n:"E06", title:"Un nom de haut gradé CIA apparaît, mais sa page est entièrement effacée", desc:"Quelle piste inexplorée les dernières lignes déclassifiées des docs 2025 ouvrent-elles sur les commanditaires ?", url:"https://youtu.be/kYXqB7r1AS4" },
+    ]
+  },
+  {
+    title: "L'Affaire Watergate",
+    desc: "Ce que Nixon cachait vraiment — preuves officielles et contradictions non résolues",
+    episodes: [
+      { n:"E01", title:"17 juin 1972 : 5 hommes arrêtés au DNC. Ils travaillaient pour Nixon.", desc:"Quels faits officiels, vérifiés et non interprétés, ont déclenché l'affaire Watergate le 17 juin 1972 ?", url:"https://youtu.be/EaNDpgg6xYY" },
+      { n:"E02", title:"Les enregistrements Oval Office prouvent la culpabilité. Nixon a tenté de les effacer.", desc:"Quelles preuves officielles et incontestables ont contraint Nixon à démissionner le 8 août 1974 ?", url:"https://youtu.be/kBa9492iTms" },
+      { n:"E03", title:"Version populaire : un cambriolage banal. Analyse : un réseau d'espionnage politique.", desc:"La version populaire réduit Watergate à un cambriolage banal. Qu'en révèle l'analyse historique sérieuse ?", url:"https://youtu.be/nQHeSiwW_i0" },
+      { n:"E04", title:"Certains disent Nixon n'était pas le cerveau. Des archives prouvent le contraire.", desc:"Certains affirment que Nixon n'était pas le cerveau de l'opération. Quels arguments étayent ou infirment cette opinion ?", url:"https://youtu.be/oN1O6Uh_inE" },
+      { n:"E05", title:"10% des archives Watergate sont censurées. Elles impliquent la CIA.", desc:"Quels documents Watergate sont encore censurés par les Archives nationales américaines en 2024, et pourquoi ?", url:"https://youtu.be/CgDRLTAXsf0" },
+      { n:"E06", title:"Un cambrioleur était agent CIA retraité. Ses paiements offshore restent introuvables.", desc:"Quelles contradictions non résolues suggèrent que Watergate cachait une opération plus vaste que la réélection de Nixon ?", url:"https://youtu.be/pWnKYYMJmQU" },
+    ]
+  },
+  {
+    title: "La Station Spatiale Secrète MOL",
+    desc: "Astronautes militaires de la Guerre Froide — le programme spatial que personne ne devait connaître",
+    episodes: [
+      { n:"E01", title:"Le programme fantôme — le Pentagone avait sa propre station spatiale depuis 1963", desc:"Comment l'USAF a construit en secret un programme spatial militaire pendant que la NASA prenait toute la gloire.", url:"https://youtu.be/9-0B4rLDu4U" },
+      { n:"E02", title:"17 astronautes militaires pour une mission dont personne ne devait parler", desc:"Qui étaient les hommes choisis pour voler sur MOL et pourquoi certains ont piloté le premier Space Shuttle.", url:"https://youtu.be/4cXW0z98k2Y" },
+      { n:"E03", title:"Le Dorian : la caméra secrète à 50 cm de résolution que l'URSS ne devait jamais découvrir", desc:"La vraie mission de MOL n'était pas l'exploration spatiale mais l'espionnage photographique de l'URSS.", url:"https://youtu.be/-yYc1SoMhEI" },
+      { n:"E04", title:"La guerre cachée NASA vs USAF — deux agences, un budget, et un programme devait disparaître", desc:"Pourquoi les militaires et les civils se battaient pour le contrôle de l'espace américain.", url:"https://youtu.be/8hMhN4pROQI" },
+      { n:"E05", title:"Annulé 40 jours avant Apollo 11 — les documents encore classifiés de MOL", desc:"Pourquoi Nixon a annulé MOL juste au moment où l'espace dominait les gros titres, et ce qui reste caché.", url:"https://youtu.be/rdZqkoT4DI0" },
+      { n:"E06", title:"De MOL aux satellites espions d'aujourd'hui — la technologie secrète qui surveille encore la Terre", desc:"Comment la technologie DORIAN de MOL a directement créé les satellites espions modernes et le télescope Hubble.", url:"https://youtu.be/R2tk7aiubVY" },
+    ]
+  },
+  {
+    title: "Le Pentagone et le Diable",
+    desc: "AAWSAP (22M$ Pentagone pour étudier les démons), FBI Paranormal Collection, Skinwalker Ranch",
+    episodes: [
+      { n:"E01", title:"AAWSAP : le Pentagone a dépensé 22 millions pour étudier les démons", desc:"En 2007, le Département de la Défense américain alloue 22 millions de dollars en secret au programme AAWSAP.", url:"https://youtu.be/0STz39UoGak" },
+      { n:"E02", title:"J. Edgar Hoover croyait aux fantômes — les preuves dans les archives FBI", desc:"Le FBI possède une collection officielle de dossiers paranormaux obtenus via FOIA — la FBI Paranormal Collection sur The Black Vault.", url:"https://youtu.be/nLEE2Oexdb0" },
+      { n:"E03", title:"100 000 exorcismes : le prêtre que le Vatican a officiellement armé", desc:"Le Père Gabriele Amorth est nommé exorciste en chef du Vatican en 1986. Jusqu'à sa mort en 2016, il réalise officiellement plus de 100 000 exorcismes.", url:"https://youtu.be/d1BIuPVHUL4" },
+      { n:"E04", title:"Skinwalker Ranch : la DIA, les poltergeists et le portail", desc:"Le Skinwalker Ranch dans l'Utah : 512 acres où des militaires, scientifiques et agents de renseignement ont documenté des phénomènes inexpliqués.", url:"https://youtu.be/IEctpKT0v1k" },
+      { n:"E05", title:"Des agents fédéraux ont enquêté sur des possessions — voici leurs rapports", desc:"Le cas Gary Gilmore (1977) : le FBI ouvre un dossier sur des affirmations de possession pendant le procès.", url:"https://youtu.be/k34VjfHnz7s" },
+      { n:"E06", title:"CIA, FBI et Vatican traquent la même entité — depuis des décennies", desc:"La CIA finance le remote viewing pour espionner des entités non-humaines. Le FBI ouvre des dossiers sur des cas de possession.", url:"https://youtu.be/3SQp4mQNask" },
+    ]
+  },
+  {
+    title: "Le Projet A119",
+    desc: "Les USA ont failli faire exploser une bombe nucléaire sur la Lune",
+    episodes: [
+      { n:"E01", title:"20 000 pages survivantes. La CIA a brûlé le reste en 1973.", desc:"Qu'est-ce qui est réellement documenté sur les expériences CIA ?", url:"https://youtu.be/7hcXTM_1PKs" },
+      { n:"E02", title:"Le Congrès n'était pas au courant. C'est un crime contre l'humanité.", desc:"Pourquoi les USA ont-ils cessé les expériences en 1968 ?", url:"https://youtu.be/HY4DAw6ahsg" },
+      { n:"E03", title:"Les preuves la contredisent à moitié. Il y a une raison pour cela.", desc:"Pourquoi la théorie d'un impact nucléaire survole existe-t-elle depuis 50 ans ?", url:"https://youtu.be/VfVdI9voEG4" },
+      { n:"E04", title:"La peur d'un monde monopolisé par les USA. Une puissance qui fait peur.", desc:"Quelles sont les motivations profondes derrière les rumeurs de bombes nucléaires lunaires ?", url:"https://youtu.be/CerXNBoY2MU" },
+      { n:"E06", title:"Le jeu en cache une partie. Projet A119 - l'arme secrète des USA.", desc:"Quels sont les liens entre le projet A119, la course spatiale et les guerres à venir ?", url:"https://youtu.be/rf7FkVCIxXY" },
+    ]
+  },
+  {
+    title: "Les Secrets du Vatican",
+    desc: "Télescope LUCIFER, théologiens extraterrestres, CIA remote viewing, protocoles premier contact",
+    episodes: [
+      { n:"E01", title:"LUCIFER : le télescope secret du Vatican en Arizona", desc:"Le Vatican possède un télescope officiel nommé LUCIFER au sommet du Mt. Graham en Arizona, géré par des Jésuites américains.", url:"https://youtu.be/Qs1mP1IMnmk" },
+      { n:"E02", title:"Le Vatican dit officiellement : les extraterrestres existent", desc:"En 2001, Monseigneur Corrado Balducci passe sur Radio Vatican pour affirmer que les extraterrestres existent et ne contredisent pas la foi chrétienne.", url:"https://youtu.be/CvhyqJPBQZ4" },
+      { n:"E03", title:"La CIA a espionné les archives du Vatican — par la pensée", desc:"Projet STARGATE de la CIA (1972–1995) : 20 ans de remote viewing financé par le Pentagone, des espions psychiques militaires payés pour 'voir' des lieux secrets.", url:"https://youtu.be/8wnjwM-tDxA" },
+      { n:"E04", title:"Le protocole secret Vatican-NASA pour le premier contact", desc:"Des réunions officielles entre représentants du Vatican et de la NASA ont eu lieu en 2009 et 2014 pour discuter du protocole post-détection de vie extraterrestre.", url:"https://youtu.be/wBeFjU6Uyps" },
+      { n:"E05", title:"Les insiders du Vatican morts avant de parler", desc:"Malachi Martin : prêtre jésuite, professeur au Pontifical Biblical Institute, secrétaire du Cardinal Bea au Vatican II. En 1996 il publie 'Windswept House'.", url:"https://youtu.be/AQg9nTWeCVo" },
+      { n:"E06", title:"100 000 exorcismes : ce que le FBI sait sur le diable", desc:"Le Père Gabriele Amorth, exorciste en chef du Vatican pendant 60 ans, a réalisé plus de 100 000 exorcismes officiels avant sa mort en 2016.", url:"https://youtu.be/h2EKTtU-RTU" },
+      { n:"E07", title:"AAWSAP : le Pentagone enquêtait sur les démons — avec le Vatican", desc:"En 2007, le Département de la Défense américain lance l'AAWSAP — 22 millions de dollars de budget secret pour étudier possession démoniaque et poltergeists.", url:"https://youtu.be/VViOdQ0UisI" },
+    ]
+  },
+  {
+    title: "Marilyn : FBI, Kennedy, Secrets",
+    desc: "La mort de Marilyn Monroe — dossiers FBI sur ses liens avec les Kennedy",
+    episodes: [
+      { n:"E02", title:"Archives FBI : 3 rencontres Marilyn-Kennedy prouvées. Pages systématiquement censurées.", desc:"Quels éléments des archives FBI confirment la proximité directe de Marilyn avec JFK et RFK ?", url:"https://youtu.be/805oLmeWa6c" },
+      { n:"E06", title:"Dernières notes Marilyn : Nom codé 'Le Grand' dans entourage Kennedy. FBI masque son identité.", desc:"Quel secret caché dans les dernières notes de Marilyn pourrait déstabiliser l'héritage des Kennedy ?", url:"https://youtu.be/b32grRqxh-Q" },
+    ]
+  },
+  {
+    title: "NASA PROTOCOLE",
+    desc: "Le protocole officiel de la NASA en cas de détection de vie extraterrestre",
+    episodes: [
+      { n:"E01", title:"Il existe un protocole officiel. Voici ce qu'il dit vraiment.", desc:"Le protocole post-détection de l'IAA — que dit-il exactement, qui l'a signé, et pourquoi le grand public n'en entend pas parler ?", url:"https://youtu.be/2J3tHuNpbjI" },
+      { n:"E02", title:"Mary Voytek : la femme qui dirige le programme secret de la NASA.", desc:"Mary Voytek, directrice du programme d'astrobiologie NASA — son rôle exact, ses déclarations publiques vs ce que les documents internes révèlent.", url:"https://youtu.be/y0hT-iLJVPU" },
+      { n:"E03", title:"Rapport NAS 2021 : ce que les scientifiques ont écrit — et ce qu'on n'a pas publié.", desc:"Le rapport 2021 de la National Academy of Sciences sur les biosignatures — les sections controversées, les recommandations ignorées.", url:"https://youtu.be/BONz9W5m104" },
+    ]
+  },
+  {
+    title: "UFO Files : 82 ans de Dossiers",
+    desc: "PURSUE Release 01 — 161 fichiers, 4 agences, 82 ans de documentation UAP gouvernementale",
+    episodes: [
+      { n:"E05", title:"FBI : portrait-robot d'un OVNI de 60m sur une base militaire US", desc:"Que décrivent exactement les 4 témoins FBI sur l'objet de 60 mètres sur un site de test américain en septembre 2023 ?", url:"https://youtu.be/-Hr2aPO_Udg" },
+    ]
+  },
+];
+
+const EN_SERIES = [
+  {
+    title: "Aurora — America's Secret Hypersonic Spy Plane",
+    desc: "The alleged classified successor to the SR-71 Blackbird — documented sightings and congressional budget references",
+    standalone: true,
+    episodes: [
+      { n:"E01", title:"America's Secret Hypersonic Spy Plane That Replaced the SR-71 — Declassified Evidence", desc:"In 1985, a US Air Force budget document accidentally listed 'Aurora' — a $2.3 billion classified aircraft program. The SR-71 Blackbird was retired in 1990.", url:"https://youtu.be/mk6lWONuSHc" },
+    ]
+  },
+  {
+    title: "Project Azorian — The CIA Stole a Soviet Submarine",
+    desc: "CIA covert operation to salvage Soviet nuclear submarine K-129 from the Pacific Ocean floor in 1974",
+    standalone: true,
+    episodes: [
+      { n:"E01", title:"The CIA Secretly Raised a Soviet Nuclear Submarine — Project Azorian Declassified", desc:"In 1968, Soviet submarine K-129 sank in the Pacific with nuclear missiles and cryptographic equipment. The CIA built a cover ship — the Hughes Glomar Explorer.", url:"https://youtu.be/U2Cv7PhpQgo" },
+    ]
+  },
+  {
+    title: "How the FBI Armed the Cartels",
+    desc: "Operation Fast and Furious — ATF and DOJ deliberately allowed weapons to walk to Mexican drug cartels",
+    standalone: true,
+    episodes: [
+      { n:"E01", title:"How the US Government Secretly Armed Mexican Drug Cartels — The Fast and Furious Scandal", desc:"Between 2006 and 2011, the ATF and DOJ ran Operation Fast and Furious: deliberately allowing over 2,000 weapons to flow to Sinaloa cartel members.", url:"https://youtu.be/LAFyF_EVxeA" },
+    ]
+  },
+  {
+    title: "America's Secret Military Space Station",
+    desc: "Manned Orbiting Laboratory (MOL) — US Air Force secret military space station program 1963–1969, declassified 2015",
+    standalone: true,
+    episodes: [
+      { n:"E01", title:"America Had a Secret Military Space Station Nobody Knew About — Declassified 2015", desc:"While NASA ran Apollo, the US Air Force was secretly building a military space station — the Manned Orbiting Laboratory. 17 military astronauts trained for it.", url:"https://youtu.be/oc0Lza2EZXc" },
+    ]
+  },
+  {
+    title: "Mossad's Assassinations in Europe",
+    desc: "Documented assassination campaigns in Europe — declassified operations 1972–2010",
+    standalone: true,
+    episodes: [
+      { n:"E01", title:"Mossad's 50 Years of Assassinations in Europe — Declassified Operations", desc:"From Operation Wrath of God after Munich 1972 to the Dubai assassination of Mahmoud Al-Mabhouh in 2010, Mossad ran documented assassination campaigns across Europe.", url:"https://youtu.be/0p0UaZiVF8s" },
+    ]
+  },
+  {
+    title: "The Truth They Hide — The Mossad",
+    desc: "Secret operations, targeted killings and Israeli intelligence — fully documented",
+    episodes: [
+      { n:"E01", title:"The Mossad's 12 Targeted Killings: Operations That Were Never Prosecuted", desc:"Israel institutionalized targeted assassination as a foreign policy tool since 1972. Every operation documented, every victim on record.", url:"https://youtu.be/EGRWyAt2k_Y" },
+      { n:"E02", title:"40 Mossad Agents in Hostile Territory: The Missions No One Officially Confirmed", desc:"Clandestine operations conducted on enemy soil — documented facts the Israeli government has never officially acknowledged.", url:"https://youtu.be/cTK1nTSFs44" },
+      { n:"E03", title:"Mossad and the KGB: Documents Suggesting a Secret Cold War Cooperation", desc:"Behind the opposing ideology, convergent interests and documented contacts between the two most feared intelligence services of the Cold War.", url:"https://youtu.be/XzTQrUpdjeo" },
+      { n:"E04", title:"How the Mossad Shapes Media Narratives: Documented Influence Operations", desc:"Documented operations where the Mossad used media as an operational tool — press manipulation, journalists under cover.", url:"https://youtu.be/XJ-j1LYW0r8" },
+      { n:"E05", title:"Unit 8200: The Mossad's Cyber Division That Tel Aviv Doesn't Officially Acknowledge", desc:"The most powerful electronic intelligence unit in the Middle East, incubator of global surveillance technologies.", url:"https://youtu.be/cMKhrFbdu4A" },
+      { n:"E06", title:"Stuxnet, Pegasus, Flame: Mossad's Cyber Weapons in Declassified Documents", desc:"Three documented Israeli cyberweapons that redefined modern warfare — what official documents and journalistic investigations established.", url:"https://youtu.be/8gzebLDw4s0" },
+    ]
+  },
+  {
+    title: "The Truth They Hide — Project Stargate",
+    desc: "When the CIA explored psychic powers — $20 million, 23 years of research, zero conclusive results",
+    episodes: [
+      { n:"E01", title:"195 Hypnosis Sessions, Zero Results: The CIA's Secret Program Before Stargate", desc:"Before Project Stargate, the CIA funded mind control and psychological manipulation programs in the 1950s. Project ARTICHOKE, BLUEBIRD.", url:"https://youtu.be/-M112Y-aOSA" },
+      { n:"E02", title:"UFOs as Cover: How the CIA Used Sighting Reports to Hide Classified Programs", desc:"For 40 years, the CIA deliberately fed confusion around UFOs to protect its most secret programs.", url:"https://youtu.be/VQSUZF62QQk" },
+      { n:"E03", title:"Project Stargate: $20 Million to Prove Remote Viewing — What the Documents Actually Say", desc:"Between 1972 and 1995, the CIA and DIA spent approximately $20 million testing whether humans could perceive information from a distance.", url:"https://youtu.be/Mnb5HZCUVxw" },
+      { n:"E04", title:"13 Years of Psychic Experiments: The Protocols, the Subjects, and Why Nothing Worked", desc:"From 1978 to 1991, US soldiers were paid by the military to remotely view Soviet targets from a windowless room at Fort Meade.", url:"https://youtu.be/265BKLpoJbA" },
+      { n:"E05", title:"Government Psychic Programs: How Intelligence Agencies Funded Decades of Pseudoscience", desc:"The US wasn't alone in believing the human mind could spy. The USSR spent up to $500 million per year on similar research.", url:"https://youtu.be/sPRys8DvUZA" },
+      { n:"E06", title:"After Stargate: Why the Program Was Shut Down — and Why the Myth Never Died", desc:"On September 29, 1995, the CIA officially closed Project Stargate. The same day, ABC News aired a segment with psychic viewers.", url:"https://youtu.be/ZTum76No1_M" },
+    ]
+  },
+  {
+    title: "The Truth They Hide — Series 1",
+    desc: "Introduction to the TTH channel — what institutions prefer to keep quiet",
+    episodes: [
+      { n:"E01", title:"70 Years of CIA Secrets: What's Declassified, What Was Burned, and What's Still Hidden", desc:"Official documents, declassified archives, government admissions exist. Everything is accessible. But nobody talks about it.", url:"https://youtu.be/qX-O9MHVEjg" },
+      { n:"E02", title:"The Files They Burned: CIA's MK-Ultra Documents After 1973's Destruction Order", desc:"Thousands of pages destroyed in 1973. Experiments denied for decades. What remains of the 20,000 surviving pages is enough to change everything.", url:"https://youtu.be/vuP3uTBbffU" },
+      { n:"E03", title:"UFOs Are Now a State Archive: What the Pentagon Confirmed and What Stays Hidden", desc:"It's no longer a theory. The US military confirmed it. The National Archives created Record Group 615 in 2024.", url:"https://youtu.be/ysk1V5qzSX4" },
+      { n:"E04", title:"Inside the Vatican's Secret Archives: 95 Kilometers of Controlled History", desc:"85 kilometers of shelving. Documents dating to the 8th century. A controlled access policy. What historians found when they got in.", url:"https://youtu.be/UQVRLaq4ZZs" },
+      { n:"E05", title:"Vault 7, Snowden, WikiLeaks: The CIA's Own Documents on Mass Surveillance", desc:"Snowden proved it. WikiLeaks documented it with Vault 7. Diplomatic cables show what governments say in private.", url:"https://youtu.be/JAWtAqRP218" },
+      { n:"E06", title:"CIA's 13 Million Declassified Pages: How to Read What They Made Public", desc:"How this channel works: primary sources, original documents, cross-verification FOIA + national archives + leaks.", url:"https://youtu.be/7mxcNXBb8xg" },
+    ]
+  },
+  {
+    title: "The Truth They Hide — Series 2",
+    desc: "Secret operations and hidden programs — what declassified archives actually prove",
+    episodes: [
+      { n:"E01", title:"Operation Paperclip: How the US Recruited 1,600 Nazi Scientists After WWII", desc:"Declassified documents prove the US government recruited Nazi scientists knowing they were war criminals.", url:"https://youtu.be/A2JvaVM4VCI" },
+      { n:"E02", title:"COINTELPRO: The FBI Files on MLK, Malcolm X and the Black Panthers", desc:"300,000 files on American citizens. Suicide letters sent to MLK. Infiltrators in civil rights groups. All documented.", url:"https://youtu.be/JUbc9NQycsA" },
+      { n:"E03", title:"Operation Mockingbird: CIA's Journalists, Editors and Media Infiltration", desc:"The 1975 Church Committee report documents journalists paid by the CIA. Informed editors. Oriented articles.", url:"https://youtu.be/ey4c_HPndTc" },
+      { n:"E04", title:"The Church Committee: When Congress Uncovered CIA Assassinations and Domestic Spying", desc:"In 1975, the US Senate investigated the CIA for the first time. What they found: assassination plans against foreign heads of state.", url:"https://youtu.be/OsqJiINbBZg" },
+      { n:"E05", title:"Operation CHAOS: The CIA's Illegal Domestic Surveillance Program (1967–1974)", desc:"The CIA has no right to operate in the US. It did anyway. From 1967 to 1974, Operation CHAOS surveilled 7,000 American citizens.", url:"https://youtu.be/_c5QNG1l5Yw" },
+      { n:"E06", title:"Iran 1953, Guatemala 1954: The CIA Coups Now Confirmed by Declassified Documents", desc:"The CIA overthrew two democratically elected governments in two years. In 2013, it officially admitted the 1953 Iranian coup.", url:"https://youtu.be/FDy1DgO-9qM" },
+    ]
+  },
+  {
+    title: "JFK: 2025 CIA Archives",
+    desc: "The assassination of JFK — CIA documents declassified in 2025",
+    episodes: [
+      { n:"E01", title:"3 Shots Confirmed, 1 Unlisted by Warren Commission", desc:"What facts certified by the 2025 CIA docs change the official account of the 11/22/1963 shooting?", url:"https://youtu.be/ERdABA96p3o" },
+      { n:"E02", title:"Oswald Met CIA Agent in Mexico 6 Weeks Pre-Assassination", desc:"What official proven links do the 2025 CIA docs establish between Oswald and US intelligence services?", url:"https://youtu.be/vLwO-skinh4" },
+      { n:"E03", title:"CIA Mastermind Theory Has Proof, No Definitive Evidence", desc:"The popular CIA mastermind thesis: what do serious analyses say against the 2025 docs?", url:"https://youtu.be/oO1nayBqwHk" },
+      { n:"E04", title:"Mafia Funded Anti-Castro Ops, No Assassination Order Proven", desc:"The anti-Castro mafia conspiracy thesis: how do the 2025 docs change its serious analysis?", url:"https://youtu.be/QVVG5EkGZD4" },
+      { n:"E05", title:"147 2025 CIA Docs Redacted, Motives Deemed Unfounded", desc:"Which 2025 CIA docs remain censored, and why are their reasons deemed dubious?", url:"https://youtu.be/WTSv5_cfscM" },
+      { n:"E06", title:"Senior CIA Officer's Name Appears, Entire Page Erased", desc:"What unexplored lead do the last declassified lines of the 2025 docs open on the masterminds?", url:"https://youtu.be/0EfcDnlm_h8" },
+    ]
+  },
+  {
+    title: "Watergate — Nixon's Hidden Secrets",
+    desc: "What Nixon was really hiding — official evidence and unresolved contradictions",
+    episodes: [
+      { n:"E01", title:"June 17, 1972: 5 DNC Burglars. They Worked for Nixon.", desc:"What official, verified, non-interpreted facts triggered the Watergate affair on June 17, 1972?", url:"https://youtu.be/mSb4HrT88ZM" },
+      { n:"E02", title:"Oval Office Tapes Prove Guilt. Nixon Tried to Erase Them.", desc:"What official, incontestable evidence forced Nixon to resign on August 8, 1974?", url:"https://youtu.be/Bn_W-kZe5T0" },
+      { n:"E03", title:"Popular Take: Trivial Burglary. Analysis: Political Spy Ring.", desc:"The popular version reduces Watergate to a trivial burglary. What does serious historical analysis reveal?", url:"https://youtu.be/1TuqK_xvn7E" },
+      { n:"E04", title:"Some Say Nixon Wasn't the Mastermind. Archives Prove Otherwise.", desc:"Some claim Nixon wasn't the brains behind the operation. What arguments support or refute this opinion?", url:"https://youtu.be/K6-0a0Njiq8" },
+      { n:"E05", title:"10% of Watergate Archives Sealed. They Implicate the CIA.", desc:"Which Watergate documents are still censored by the US National Archives in 2024, and why?", url:"https://youtu.be/vxOzYp57pRM" },
+      { n:"E06", title:"One Burglar Was Retired CIA. His Offshore Payments Remain Missing.", desc:"What unresolved contradictions suggest Watergate hid a broader operation than Nixon's re-election?", url:"https://youtu.be/m2-lNzYICYU" },
+    ]
+  },
+  {
+    title: "The Secret MOL Space Station",
+    desc: "Cold War military astronauts — the space program nobody was allowed to know about",
+    episodes: [
+      { n:"E01", title:"The Phantom Program — The Pentagon Had Its Own Space Station Since 1963", desc:"How the USAF secretly built a military space program while NASA took all the glory.", url:"https://youtu.be/KhLeex87xEk" },
+      { n:"E02", title:"17 Military Astronauts for a Mission No One Was Allowed to Talk About", desc:"Who were the men chosen to fly on MOL and why some piloted the first Space Shuttle.", url:"https://youtu.be/Q3_pfJ8_sTM" },
+      { n:"E03", title:"The Dorian: The Secret 50cm-Resolution Camera the USSR Could Never Discover", desc:"MOL's real mission wasn't space exploration but photographic espionage of the USSR.", url:"https://youtu.be/m6B1XnAF7WY" },
+      { n:"E04", title:"The Hidden War NASA vs USAF — Two Agencies, One Budget, One Program Had to Vanish", desc:"Why the military and civilians fought for control of American space.", url:"https://youtu.be/1BTci5W-uoA" },
+      { n:"E05", title:"Canceled 40 Days Before Apollo 11 — MOL's Still-Classified Documents", desc:"Why Nixon canceled MOL just as space dominated headlines, and what remains hidden.", url:"https://youtu.be/fAd-TAnXSEQ" },
+      { n:"E06", title:"From MOL to Today's Spy Satellites — The Secret Technology Still Watching Earth", desc:"How MOL's DORIAN technology directly created modern spy satellites and the Hubble telescope.", url:"https://youtu.be/6rzvgeJDOyY" },
+    ]
+  },
+  {
+    title: "The Pentagon's Devil Files",
+    desc: "AAWSAP ($22M Pentagon to study demons), FBI Paranormal Collection, Skinwalker Ranch",
+    episodes: [
+      { n:"E01", title:"AAWSAP: The Pentagon Spent $22 Million to Study Demons", desc:"In 2007, the US Department of Defense secretly allocated $22 million to the AAWSAP program — studying demonic possession, poltergeists, UAPs.", url:"https://youtu.be/T-DLMCdC0dw" },
+      { n:"E02", title:"J. Edgar Hoover Believed in Ghosts — Proof in FBI Archives", desc:"The FBI has an official collection of paranormal files obtained via FOIA — the FBI Paranormal Collection on The Black Vault.", url:"https://youtu.be/gNLmdO9tQfI" },
+      { n:"E03", title:"100,000 Exorcisms: The Priest the Vatican Officially Armed", desc:"Father Gabriele Amorth was appointed chief exorcist of the Vatican in 1986. Until his death in 2016, he officially performed more than 100,000 exorcisms.", url:"https://youtu.be/uIBSYLv0vT8" },
+      { n:"E04", title:"Skinwalker Ranch: The DIA, Poltergeists and the Portal", desc:"Skinwalker Ranch in Utah: 512 acres where military personnel, scientists and intelligence agents documented unexplained phenomena for years.", url:"https://youtu.be/oqslPoZ81kQ" },
+      { n:"E05", title:"Federal Agents Investigated Possessions — Here Are Their Reports", desc:"The Gary Gilmore case (1977): the FBI opens a file on possession claims during the trial.", url:"https://youtu.be/S-SZCWYHRXI" },
+      { n:"E06", title:"CIA, FBI and the Vatican Hunt the Same Entity — For Decades", desc:"The CIA funds remote viewing to spy on non-human entities. The FBI opens files on possession cases and satanic cults.", url:"https://youtu.be/WTpn3TW8yZQ" },
+    ]
+  },
+  {
+    title: "Project A119 — Lunar Government Secrets",
+    desc: "The US nearly detonated a nuclear bomb on the Moon",
+    episodes: [
+      { n:"E01", title:"20,000 Surviving Pages. CIA Burned the Rest in 1973.", desc:"What is actually documented about CIA experiments?", url:"https://youtu.be/BNy58yTLGGM" },
+      { n:"E02", title:"Congress Wasn't Informed. It's a Crime Against Humanity.", desc:"Why did the US stop the experiments in 1968?", url:"https://youtu.be/7BbJ6MgPrkg" },
+      { n:"E03", title:"Half the Evidence Contradicts It. There's a Reason for That.", desc:"Why has the theory of a nuclear lunar impact existed for 50 years?", url:"https://youtu.be/R4eMS2etXRw" },
+      { n:"E04", title:"Fear of a US-Dominated World. A Power to Be Afraid Of.", desc:"What are the deep motivations behind the nuclear moon bomb rumors?", url:"https://youtu.be/Zkap35xNOfg" },
+      { n:"E05", title:"Documentary Treasure Hunt. The Space Secrets Await Discovery.", desc:"What are the 147 remaining classified documents that could change everything we think?", url:"https://youtu.be/d0EMowOaCO8" },
+      { n:"E06", title:"Part of the Game Is Hidden. Project A119 — The Secret Weapon of the USA.", desc:"What are the links between Project A119, the space race and the wars to come?", url:"https://youtu.be/U9DKML9kJj4" },
+    ]
+  },
+  {
+    title: "Vatican's Hidden Secrets",
+    desc: "Telescope LUCIFER, extraterrestrial theologians, CIA remote viewing on the Vatican, first contact protocols",
+    episodes: [
+      { n:"E01", title:"LUCIFER: The Vatican's Secret Telescope in Arizona", desc:"The Vatican owns an official telescope named LUCIFER atop Mt. Graham in Arizona, operated by American Jesuits.", url:"https://youtu.be/g1X6W1kmhFc" },
+      { n:"E02", title:"The Vatican Officially Says: Extraterrestrials Exist", desc:"In 2001, Monsignor Corrado Balducci appeared on Radio Vatican — official voice of the Holy See — to state that extraterrestrials exist.", url:"https://youtu.be/JN8Cj2kVHns" },
+      { n:"E04", title:"The Vatican-NASA Secret Protocol for First Contact", desc:"Official meetings between Vatican and NASA representatives took place in 2009 and 2014 to discuss post-detection protocols for extraterrestrial life.", url:"https://youtu.be/mjEz7fMM9CI" },
+    ]
+  },
+  {
+    title: "Marilyn: FBI, Kennedy, Secrets",
+    desc: "The death of Marilyn Monroe — FBI files on her connections to the Kennedys",
+    episodes: [
+      { n:"E01", title:"FBI Tracked Marilyn Over Kennedy Ties. She Threatened to Spill Secrets.", desc:"What official links between Marilyn Monroe, the Kennedys and the FBI are proven by pre-death archives?", url:"https://youtu.be/KvwB_SBrc6o" },
+      { n:"E02", title:"FBI Files: 3 Confirmed Marilyn-Kennedy Meetings. Pages Systematically Redacted.", desc:"What FBI archive elements confirm Marilyn's direct proximity to JFK and RFK?", url:"https://youtu.be/X5XRdiUfgnQ" },
+      { n:"E03", title:"Assassination Claim: Witnesses Saw RFK Aide at Marilyn's. No Hard Evidence.", desc:"Is the thesis of an assassination ordered by the Kennedy entourage supported by solid evidence?", url:"https://youtu.be/WHbhxvc9mdE" },
+      { n:"E04", title:"Official Suicide Story: Experts Find Abnormal Injection. Medical Report Ignores It.", desc:"Is the official suicide version challenged by independent forensic analyses?", url:"https://youtu.be/jOAK1Rr7KZA" },
+      { n:"E05", title:"2024: 120 Marilyn-Kennedy FBI Pages Still Classified. No Official Justification.", desc:"Why are FBI files on Marilyn and the Kennedys still classified in 2024?", url:"https://youtu.be/YBTAlEmQV6Y" },
+      { n:"E06", title:"Marilyn's Last Notes: Coded Name 'The Big One' in Kennedy Circle. FBI Hides Identity.", desc:"What secret hidden in Marilyn's last notes could destabilize the Kennedy legacy?", url:"https://youtu.be/WbEw3tNkYEE" },
+    ]
+  },
+  {
+    title: "NASA PROTOCOL",
+    desc: "NASA's official protocol in case of extraterrestrial life detection — IAA documents, astrobiology program, UAP hearings",
+    episodes: [
+      { n:"E01", title:"There Is an Official Protocol. Here Is What It Actually Says.", desc:"The IAA post-detection protocol — what does it say exactly, who signed it, and why doesn't the general public hear about it?", url:"https://youtu.be/jfnQAjWymEU" },
+      { n:"E02", title:"Mary Voytek: The Woman Running NASA's Hidden Program.", desc:"Mary Voytek, director of NASA's astrobiology program — her exact role, public statements vs what internal documents reveal.", url:"https://youtu.be/mlJYoGPo7uc" },
+      { n:"E03", title:"NAS 2021 Report: What Scientists Wrote — And What Was Never Released.", desc:"The 2021 National Academy of Sciences report on biosignatures — the controversial sections, ignored recommendations.", url:"https://youtu.be/6MMh0lVRNfg" },
+      { n:"E04", title:"2023–2026: Congress, NASA and UAPs. Why Now?", desc:"The US Congress UAP hearings (2023), NASA's official UAP report (Sept. 2023), and David Grusch's statements — what link to the IAA protocol?", url:"https://youtu.be/ZsBwxJ1cicA" },
+    ]
+  },
+  {
+    title: "UFO Files: 82 Years of Declassified Records",
+    desc: "PURSUE Release 01 — 161 files, 4 agencies, 82 years of government UAP documentation (FBI, NASA, DoD, State Dept) — 1947 to 2026",
+    episodes: [
+      { n:"E01", title:"800 FBI UFO Pages — Still Secret 79 Years After Roswell", desc:"Why did the FBI investigate UFOs for 21 years, and what do the 800 pages contain — 67% of which remain redacted today?", url:"https://youtu.be/-EJ6F9JLNsQ" },
+      { n:"E02", title:"Apollo UAP Photos: Pentagon Reopens the Case 54 Years Later", desc:"What exactly do Apollo mission photos and transcripts show, and why did the Pentagon reopen the investigation 54 years later?", url:"https://youtu.be/qQbfN3S-i3A" },
+      { n:"E03", title:"US Embassies Filed UAP Reports. Then 17 Years of Files Went Missing.", desc:"What do American diplomatic cables reveal about UAPs, and why are two periods of 10 and 7 years missing from archives?", url:"https://youtu.be/Sdp0z_DmlfM" },
+      { n:"E04", title:"Military UAP 2020: 25 Reports, 90-Degree Turns, No Explanation", desc:"What do the 25 Range Fouler reports of 2020 document, and do the observed behaviors match any known technology?", url:"https://youtu.be/UXJM6JF9wbI" },
+      { n:"E05", title:"FBI Drew a Composite Sketch of a 60-Meter UFO at a US Military Base", desc:"What exactly do the 4 FBI witnesses describe about the 60-meter object at a US test site in September 2023?", url:"https://youtu.be/g16JgtQgSPk" },
+      { n:"E06", title:"Orbs That Launch Other Orbs: 7 Federal Agents, AARO Has No Answer", desc:"What is the Western US Event, and why does AARO classify it among the most compelling cases in its archives?", url:"https://youtu.be/a3ekVpx3q4g" },
+    ]
+  },
+];
+
+// ═══════════════════════ RENDER ═══════════════════════
+
+function buildCard(series, index) {
+  const epCount = series.episodes.length;
+  const badge = series.standalone
+    ? '<span class="card-badge badge-standalone">Standalone</span>'
+    : '';
+
+  const episodes = series.episodes.map(ep => `
+    <a class="ep-item" href="${ep.url}" target="_blank" rel="noopener">
+      <span class="ep-num">${ep.n}</span>
+      <div class="ep-content">
+        <div class="ep-title">${ep.title}</div>
+        <div class="ep-desc">${ep.desc}</div>
+      </div>
+      <span class="ep-watch">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        Watch
+      </span>
+    </a>
+  `).join('');
+
+  return `
+    <div class="series-card" onclick="toggleCard(this)">
+      <div class="card-header">
+        <span class="card-num">${String(index+1).padStart(2,'0')}</span>
+        <div class="card-info">
+          ${badge}
+          <div class="card-title">${series.title}</div>
+          <div class="card-desc">${series.desc}</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="ep-count"><span>${epCount}</span> épisode${epCount>1?'s':''}</span>
+        <span class="toggle-arrow">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </div>
+      <div class="episodes-panel">
+        <div class="ep-list">${episodes}</div>
+      </div>
+    </div>
+  `;
+}
+
+document.getElementById('grid-fr').innerHTML = FR_SERIES.map((s,i) => buildCard(s,i)).join('');
+document.getElementById('grid-en').innerHTML = EN_SERIES.map((s,i) => buildCard(s,i)).join('');
+
+// ═══════════════════════ INTERACTIONS ═══════════════════════
+
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+}
+</script>
+</body>
+</html>
