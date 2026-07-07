@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TikTok OAuth — Code d'autorisation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { background:#0b0b0b; color:#e6e6e6; font-family:Georgia,serif; max-width:720px; margin:0 auto; padding:40px 20px; line-height:1.6; }
+  h1 { color:#fff; }
+  .box { background:#1a1a1a; border:1px solid #333; border-radius:8px; padding:20px; margin-top:20px; word-break:break-all; font-family:monospace; font-size:1.1em; }
+  button { background:#4da3ff; color:#000; border:none; padding:10px 20px; border-radius:6px; font-size:1em; cursor:pointer; margin-top:16px; }
+  button:hover { background:#7fbfff; }
+  .hint { color:#888; font-size:0.9em; margin-top:20px; }
+</style>
+</head>
+<body>
+  <h1>Code d'autorisation TikTok reçu</h1>
+  <p>Copie ce code et colle-le dans le terminal du script d'autorisation :</p>
+  <div class="box" id="code">(lecture en cours...)</div>
+  <button onclick="copyCode()">Copier le code</button>
+  <p class="hint">Cette page ne stocke ni n'envoie ce code nulle part — elle se contente de l'afficher depuis l'URL.</p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const err = params.get('error');
+    const el = document.getElementById('code');
+    if (code) {
+      el.textContent = code;
+    } else if (err) {
+      el.textContent = 'Erreur : ' + err + ' — ' + (params.get('error_description') || '');
+    } else {
+      el.textContent = 'Aucun code trouvé dans l\'URL.';
+    }
+    function copyCode() {
+      navigator.clipboard.writeText(el.textContent);
+    }
+  </script>
+</body>
+</html>
